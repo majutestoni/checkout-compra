@@ -17,6 +17,7 @@ public class SaleEntity extends BaseEntity{
 
 	private CouponEntity coupon;
 
+
 	private int quantityInstallments;
 
 	private List<SaleItemEntity> items = new ArrayList<>();

@@ -2,6 +2,8 @@ package service;
 
 import java.util.Scanner;
 
+import domain.SaleEntity;
+
 /**
  * Serviço de compra/venda
  *
@@ -10,4 +12,6 @@ import java.util.Scanner;
 public interface SaleService {
 
 	void newSale(Scanner scan);
+
+	void showData(Scanner scan);
 }

@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 import domain.CouponEntity;
@@ -19,6 +21,9 @@ import domain.SaleItemEntity;
  */
 public class SaleServiceImpl implements SaleService {
 
+	private Map<Long, SaleEntity> sales = new HashMap<>();
+	private int geraId = 0; // auxilia para gerar ids
+
 	private CouponService couponService;
 	private ProductService productService;
 
@@ -27,21 +32,47 @@ public class SaleServiceImpl implements SaleService {
 		this.productService = productService;
 	}
 
+	@Override
 	public void newSale(Scanner scan) {
 		requstData(scan);
 	}
 
-	private void requstData(Scanner scan) {
+	@Override
+	public void showData(Scanner scan) {
+		int opcao = 1;
+		while (opcao != 0) {
+			System.out.print("Informe o ID da compra: ");
+			long idConsulta = scan.nextLong();
+			SaleEntity sale = sales.get(idConsulta);
+
+			if (sale == null) {
+				System.out.println("Nenhuma compra encontrada com esse ID. Tente novamente.");
+			} else {
+				printSaleSummary(sale, false);
+			}
+
+			System.out.println("1 - Consultar mais uma compra");
+			System.out.println("0 - Sair");
+			opcao = readInt(scan, "Escolha: ", 0, 1);
+		}
+	}
+
+	private SaleEntity requstData(Scanner scan) {
 		SaleEntity saleEntity = new SaleEntity();
+		geraId++;
+		saleEntity.setId(Long.valueOf(geraId));
 
-		System.out.println("1 - Adicionar item");
-		System.out.println("2 - Adicionar cupom");
-		System.out.println("3 - Finalizar compra");
-		System.out.println("0 - Sair");
-		System.out.print("Escolha: ");
-		int opcao = scan.nextInt();
+		int opcao = -1;
 
-		while (opcao != 0 || opcao != 3) {
+		do {
+			System.out.println("1 - Adicionar item");
+			System.out.println("2 - Adicionar cupom");
+			System.out.println("3 - Finalizar compra");
+			System.out.println("0 - Sair");
+			System.out.print("Escolha: ");
+
+			opcao = readInt(scan, "Escolha: ", 0, 3);
+
 			switch (opcao) {
 				case 1:
 					newItemProduct(saleEntity, scan);
@@ -56,24 +87,20 @@ public class SaleServiceImpl implements SaleService {
 						System.out.println("Por favor, corrija os dados da compra antes de finalizar.");
 						break;
 					}
-
-					showData(saleEntity);
-					return;
+					finalizeSale(saleEntity);
+					return saleEntity;
+				case 0:
+					return null;
 				default:
-					System.out.println("Opção inválida");
+					System.out.println("Opção inválida. Tente novamente.");
 					break;
 			}
 
-			System.out.println("1 - Adicionar item");
-			System.out.println("2 - Adicionar cupom");
-			System.out.println("3 - Finalizar compra");
-			System.out.println("0 - Sair");
-			System.out.print("Escolha: ");
-			opcao = scan.nextInt();
-		}
+		} while (opcao != 0);
 
-
+		return null;
 	}
+
 
 	private boolean validSale(SaleEntity saleEntity) {
 		if (saleEntity.getItems() == null || saleEntity.getItems().isEmpty()) {
@@ -101,19 +128,7 @@ public class SaleServiceImpl implements SaleService {
 		SaleItemEntity item = new SaleItemEntity();
 		item.setProduct(product);
 
-		int quantidade = 0;
-		while (quantidade < 1) {
-			System.out.print("Quantidade: ");
-			if (scan.hasNextInt()) {
-				quantidade = scan.nextInt();
-				if (quantidade < 1) {
-					System.out.println("Quantidade deve ser maior que zero. Tente novamente.");
-				}
-			} else {
-				System.out.println("Entrada inválida. Digite um número inteiro.");
-				scan.next();
-			}
-		}
+		int quantidade = readInt(scan, "Quantidade: ", 1, Integer.MAX_VALUE);
 
 		item.setQuantity(quantidade);
 		saleEntity.addItem(item);
@@ -123,91 +138,39 @@ public class SaleServiceImpl implements SaleService {
 	private void setPayment(SaleEntity saleEntity, Scanner scan) {
 		scan.nextLine();
 
-		int paymentType = -1;
-
-		while (paymentType < 0 || paymentType > 2) {
-			System.out.print("Informe a forma de pagamento, sendo:\n" +
-					"0 - PIX\n" +
-					"1 - CREDITO\n" +
-					"2 - BOLETO\n" +
-					"Escolha: ");
-			if (scan.hasNextInt()) {
-				paymentType = scan.nextInt();
-				if (paymentType < 0 || paymentType > 2) {
-					System.out.println("Opção inválida. Tente novamente.");
-				}
-			} else {
-				System.out.println("Entrada inválida. Informe um número.");
-				scan.next();
-			}
-		}
+		int paymentType = readInt(scan,
+				"Informe a forma de pagamento, sendo:\n0 - PIX\n1 - CREDITO\n2 - BOLETO\nEscolha: ", 0, 2);
 
 		saleEntity.setPaymentMethod(PaymentMethod.fromIndex(paymentType));
 
 		if (paymentType == 1) {
-			int quantity = 0;
-
-			while (quantity < 1 || quantity > 12) {
-				System.out.print("Informe a quantidade de parcelas (1 a 12): ");
-				if (scan.hasNextInt()) {
-					quantity = scan.nextInt();
-					if (quantity < 1 || quantity > 12) {
-						System.out.println("Quantidade inválida. Deve estar entre 1 e 12.");
-					}
-				} else {
-					System.out.println("Entrada inválida. Informe um número inteiro.");
-					scan.next();
-				}
-			}
-
+			int quantity = readInt(scan, "Informe a quantidade de parcelas (1 a 12): ", 1, 12);
 			saleEntity.setQuantityInstallments(quantity);
 		}
 	}
 
 
-	private void showData(SaleEntity saleEntity) {
-		System.out.println("------ SUA COMPRA --------  ");
-
-		System.out.println("Produtos:");
-		for (SaleItemEntity item: saleEntity.getItems()) {
-			System.out.println(item.getProduct().toString() + " x " + item.getQuantity());
-		}
-		
-		BigDecimal valueProducts = getValuePRoducts(saleEntity);
-		System.out.println("Subtotal: R$" + valueProducts);
-
-		CouponEntity couponEntity = saleEntity.getCoupon();
-		BigDecimal discountCupom = couponService.applyCoupon(couponEntity, valueProducts);
-
-		BigDecimal valueFreight = getValueFreight(couponEntity, valueProducts);
-		BigDecimal totalFinal = valueProducts.subtract(discountCupom).add(valueFreight);
-
-		System.out.println("Total com Descontos: R$" + totalFinal);
-
-		System.out.println("Pagamento: ");
-		BigDecimal totalValue = getValuePayment(totalFinal, saleEntity);
-
-		System.out.println("Total final: R$" + totalValue);
-		System.out.println("Status: Pedido Finalizado");
-		System.out.println("--------------------------");
-
+	private void finalizeSale(SaleEntity saleEntity) {
+		printSaleSummary(saleEntity, true);
+		sales.put(saleEntity.getId(), saleEntity);
 	}
+
 
 	private BigDecimal getValuePayment(BigDecimal totalFinal, SaleEntity saleEntity) {
 		System.out.println(" - Método: " + saleEntity.getPaymentMethod());
-		LocalDateTime dateCurrente = LocalDateTime.now();
+		LocalDateTime currentDate = LocalDateTime.now();
 		switch (saleEntity.getPaymentMethod()) {
 			case PIX:
 				BigDecimal discount = totalFinal.multiply(new BigDecimal("0.10"));
 				System.out.println(" - Desconto de R$: " + discount + " (10%)");
-				LocalDateTime timePix = dateCurrente.plusMinutes(30);
+				LocalDateTime timePix = currentDate.plusMinutes(30);
 				System.out.println(" - Pagamento até as " + timePix.getHour() + ":" + timePix.getMinute() + " horas");
 				return totalFinal.subtract(discount);
 			case BOLETO:
 				BigDecimal discountB = totalFinal.multiply(new BigDecimal("0.05"));
 				System.out.println(" - Desconto de R$: " + discountB + " (5%)");
 				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-				String formatDate = dateCurrente.plusDays(3).format(formatter);
+				String formatDate = currentDate.plusDays(3).format(formatter);
 				System.out.println(" - Pagamento até dia: " + formatDate);
 				return totalFinal.subtract(discountB);
 			case CREDITO:
@@ -245,7 +208,7 @@ public class SaleServiceImpl implements SaleService {
 		return new BigDecimal(20);
 	}
 
-	private BigDecimal getValuePRoducts(SaleEntity sale) {
+	private BigDecimal getValueProducts(SaleEntity sale) {
 		return sale.getItems().stream()
 				.map(item -> item.getProduct().getValue().multiply(BigDecimal.valueOf(item.getQuantity())))
 				.reduce(BigDecimal.ZERO, BigDecimal::add);
@@ -253,21 +216,8 @@ public class SaleServiceImpl implements SaleService {
 
 	private void setCoupon(SaleEntity saleEntity, Scanner scan) {
 		if (saleEntity.getCoupon() != null) {
-			int opcao = -1;
-			while (opcao != 1 && opcao != 2) {
-				System.out.println("Você já possui um cupom... deseja alterar?");
-				System.out.print("1 - Sim\n2 - Não\nEscolha: ");
-
-				if (scan.hasNextInt()) {
-					opcao = scan.nextInt();
-					if (opcao != 1 && opcao != 2) {
-						System.out.println("Opção inválida. Escolha 1 ou 2.");
-					}
-				} else {
-					System.out.println("Entrada inválida. Digite um número.");
-					scan.next();
-				}
-			}
+			System.out.println("Você já possui um cupom... deseja alterar?");
+			int opcao = readInt(scan, "1 - Sim\n2 - Não\nEscolha: ", 1, 2);
 
 			if (opcao == 1) {
 				couponService.setCouponSale(saleEntity, scan);
@@ -276,4 +226,57 @@ public class SaleServiceImpl implements SaleService {
 			couponService.setCouponSale(saleEntity, scan);
 		}
 	}
+
+	private int readInt(Scanner scan, String prompt, int min, int max) {
+		int value;
+		while (true) {
+			System.out.print(prompt);
+			if (scan.hasNextInt()) {
+				value = scan.nextInt();
+				if (value >= min && value <= max) return value;
+				System.out.println("Valor fora do intervalo permitido.");
+			} else {
+				System.out.println("Entrada inválida. Digite um número.");
+				scan.next();
+			}
+		}
+	}
+
+	private void printSaleSummary(SaleEntity sale, boolean isFinalized) {
+		System.out.println("------ DETALHES DA COMPRA --------");
+		System.out.println("ID: " + sale.getId());
+		System.out.println("Produtos:");
+		for (SaleItemEntity item : sale.getItems()) {
+			System.out.println(item.getProduct() + " x " + item.getQuantity());
+		}
+
+		BigDecimal valueProducts = getValueProducts(sale);
+		System.out.println("Subtotal: R$ " + valueProducts);
+
+		CouponEntity couponEntity = sale.getCoupon();
+		BigDecimal couponDiscount = couponService.applyCoupon(couponEntity, valueProducts);
+		BigDecimal freight = getValueFreight(couponEntity, valueProducts);
+		BigDecimal totalFinal = valueProducts.subtract(couponDiscount).add(freight);
+
+		System.out.println("Total com Descontos: R$ " + totalFinal);
+
+		if (isFinalized) {
+			System.out.println("Pagamento:");
+			BigDecimal totalPaid = getValuePayment(totalFinal, sale);
+			sale.setValue(totalPaid);
+			System.out.println("Total final: R$" + totalPaid);
+			System.out.println("Status: Pedido Finalizado");
+			System.out.println("--------------------------");
+		} else {
+			System.out.println("Forma de Pagamento: " + sale.getPaymentMethod());
+			if (sale.getPaymentMethod() == PaymentMethod.CREDITO) {
+				System.out.println("Parcelas: " + sale.getQuantityInstallments());
+			}
+			System.out.println("Valor pago: R$ " + sale.getValue());
+			System.out.println("Status: Pedido Finalizado");
+			System.out.println("----------------------------------");
+		}
+	}
+
+
 }

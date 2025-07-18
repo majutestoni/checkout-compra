@@ -6,7 +6,7 @@ Simulador de checkout de e-comerce usando terminal
 ### Especificações técnicas
  * IDE de programação - [IntelliJ](https://www.jetbrains.com/idea/download/?section=windows) 
  * Java 17 - [Azul zulu](https://www.azul.com/downloads/?package=jdk#zulu)
-* [Ver Diagrama UML V1](uml_v1.png)
+* [Ver esboço UML V1](uml_v1.png)
 
 
 ### Execução do programa
@@ -19,5 +19,10 @@ Simulador de checkout de e-comerce usando terminal
 
 3. Abrir o arquivo `Main` e dar `run`
 
+### Usando o programa
+O programa possui alguns menus, onde todas as opções são apresentadas e posteriormente aparece o `escolha:`
 
+Caso informe algum dado erroneamente, ex: deveria por `1` e informei `a` o sistema mostra uma mensagem como 
+> Valor fora do intervalo permitido.
 
+e novamente poderá informar outro valor

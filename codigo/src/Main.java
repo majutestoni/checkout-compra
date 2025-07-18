@@ -1,5 +1,10 @@
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
+import domain.SaleEntity;
 import service.CouponService;
 import service.CouponServiceImpl;
 import service.ProductService;
@@ -26,16 +31,15 @@ public class Main {
 		System.out.println("======== Iniciando aplicação ========");
 
 		Scanner scan = new Scanner(System.in);
-
-		System.out.println("1. Iniciar nova compra");
-		System.out.println("0. Sair");
-		System.out.print("Escolha: ");
-		int opcao = scan.nextInt();
+		int opcao = 10000;
 
 		while (opcao != 0) {
 			switch (opcao) {
 				case 1:
 					saleService.newSale(scan);
+					break;
+				case 2:
+					saleService.showData(scan);
 					break;
 				default:
 					System.out.println("Opção inválida!");
@@ -44,11 +48,26 @@ public class Main {
 
 
 			System.out.println("1. Iniciar nova compra");
+			System.out.println("2. Consultar uma compra");
 			System.out.println("0. Sair");
-			System.out.print("Escolha: ");
-			opcao = scan.nextInt();
+			opcao = readInt(scan, "Escolha:", 0, 2);
 		}
 
 		System.out.println("======== Fim aplicação ========");
+	}
+
+	private static int readInt(Scanner scan, String prompt, int min, int max) {
+		int value;
+		while (true) {
+			System.out.print(prompt);
+			if (scan.hasNextInt()) {
+				value = scan.nextInt();
+				if (value >= min && value <= max) return value;
+				System.out.println("Valor fora do intervalo permitido.");
+			} else {
+				System.out.println("Entrada inválida. Digite um número.");
+				scan.next();
+			}
+		}
 	}
 }
