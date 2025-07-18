@@ -33,8 +33,8 @@ public class ProductServiceImpl implements ProductService {
 			String valueStr = scan.nextLine();
 			try {
 				value = new BigDecimal(valueStr);
-				if (value.compareTo(BigDecimal.ZERO) < 0) {
-					System.out.println("Preço deve ser positivo.");
+				if (value.compareTo(new BigDecimal("0.01")) < 0) {
+					System.out.println("Preço deve ser maior ou igual a 0.01.");
 					value = null;
 				}
 			} catch (NumberFormatException e) {

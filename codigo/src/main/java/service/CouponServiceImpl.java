@@ -89,7 +89,7 @@ public class CouponServiceImpl implements CouponService{
 
 	@Override
 	public boolean isFreightFree(CouponEntity couponEntity) {
-		return Objects.equals("CUPOMFRETEGRATIS", couponEntity.getCode());
+		return couponEntity != null && Objects.equals("CUPOMFRETEGRATIS", couponEntity.getCode());
 	}
 
 }
