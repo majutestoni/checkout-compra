@@ -29,7 +29,7 @@ e novamente poderá informar outro valor
 
 ### Explicando um pouco do código
 
-Visando melhor organização, toda a parte de coleta de dados, tratamentos e processamento ficam nos serviços, sendo a Main somente para chamar o `SaleService` (vulgo serviço principal) 
+Visando uma melhor organização, toda a parte de coleta de dados, tratamentos e processamento ficam nos serviços, sendo a `Main` somente para chamar o `SaleService` (vulgo serviço principal) 
 
 | Entitdade | Representa | Serviço | Implementação |
 | ------ | ------ | ------ | ------ |
