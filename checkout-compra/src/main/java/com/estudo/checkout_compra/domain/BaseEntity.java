@@ -4,7 +4,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
-import lombok.EqualsAndHashCode;
 
 /**
  * Entidade base
@@ -12,7 +11,6 @@ import lombok.EqualsAndHashCode;
  * @author Majú Testoni
  */
 @MappedSuperclass
-@EqualsAndHashCode(of = "id")
 public abstract   class BaseEntity {
 
 	@Id

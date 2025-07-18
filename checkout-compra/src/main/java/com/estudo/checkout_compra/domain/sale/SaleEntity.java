@@ -36,9 +36,18 @@ public class SaleEntity extends BaseEntity {
 	@Column(name = "vl_sale_freught", nullable = false, precision = 19, scale = 2)
 	private BigDecimal valueFreight;
 
+	@Column(name = "vl_sale_discout", precision = 19, scale = 2)
+	private BigDecimal valueDiscount;
+
+	@Column(name = "vl_sale_Fees", precision = 19, scale = 2)
+	private BigDecimal valueFees;
+
 	@Enumerated(EnumType.ORDINAL)
 	@Column(name = "tp_payment_method")
 	private PaymentMethod paymentMethod;
+
+	@Column(name = "qt_installments")
+	private Integer quantityInstallments;
 
 	@ManyToOne
 	@JoinColumn(name = "coupon_id_coupon")
@@ -90,5 +99,29 @@ public class SaleEntity extends BaseEntity {
 
 	public void setValueFreight(BigDecimal valueFreight) {
 		this.valueFreight = valueFreight;
+	}
+
+	public Integer getQuantityInstallments() {
+		return quantityInstallments;
+	}
+
+	public void setQuantityInstallments(Integer quantityInstallments) {
+		this.quantityInstallments = quantityInstallments;
+	}
+
+	public BigDecimal getValueDiscount() {
+		return valueDiscount;
+	}
+
+	public void setValueDiscount(BigDecimal valueDiscount) {
+		this.valueDiscount = valueDiscount;
+	}
+
+	public BigDecimal getValueFees() {
+		return valueFees;
+	}
+
+	public void setValueFees(BigDecimal valueFees) {
+		this.valueFees = valueFees;
 	}
 }

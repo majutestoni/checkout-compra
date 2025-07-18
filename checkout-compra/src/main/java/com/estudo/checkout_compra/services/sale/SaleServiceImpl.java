@@ -1,6 +1,9 @@
 package com.estudo.checkout_compra.services.sale;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import org.springframework.stereotype.Service;
 
@@ -73,8 +76,45 @@ public class SaleServiceImpl implements SaleService {
 		}
 
 		entity.setValue(finalValue);
+		setValueFees(entity);
+
 
 		entity = saleRepository.save(entity);
 		return entity;
+	}
+
+	private void setValueFees(SaleEntity entity) {
+		BigDecimal baseValue = entity.getValue();
+		BigDecimal discount = BigDecimal.ZERO;
+
+		switch (entity.getPaymentMethod()) {
+			case CREDITO:
+				Integer installments = entity.getQuantityInstallments();
+				if (installments == null || installments < 1 || installments > 12) {
+					System.out.println("\"Número de parcelas inválido. Deve ser entre 1 e 12.\"");
+					return;
+				}
+				if (installments >= 4) {
+					double taxa = 0.02;
+					double totalComJuros = baseValue.doubleValue() * Math.pow(1 + taxa, installments);
+					BigDecimal valorComJuros = BigDecimal.valueOf(totalComJuros).setScale(2, RoundingMode.HALF_UP);
+					entity.setValueFees(valorComJuros.subtract(baseValue));
+				}
+				break;
+
+			case BOLETO:
+				discount = baseValue.multiply(BigDecimal.valueOf(0.05)).setScale(2, RoundingMode.HALF_UP);
+				// LocalDate vencimento = LocalDate.now().plusDays(5); // considerando 3 dias úteis (pode ajustar)
+				// DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+				// entity.setValueDiscount(discount);
+				break;
+
+			case PIX:
+				discount = baseValue.multiply(BigDecimal.valueOf(0.10)).setScale(2, RoundingMode.HALF_UP);
+				entity.setValueDiscount(discount);
+				break;
+
+			default:
+		}
 	}
 }
