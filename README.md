@@ -6,7 +6,7 @@ Simulador de checkout de e-comerce usando terminal
 ### Especificações técnicas
  * IDE de programação - [IntelliJ](https://www.jetbrains.com/idea/download/?section=windows) 
  * Java 17 - [Azul zulu](https://www.azul.com/downloads/?package=jdk#zulu)
- ![Esboço UML V1](uml_v1.png)
+* [Ver Diagrama UML V1](uml_v1.png)
 
 
 ### Execução do programa
