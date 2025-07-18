@@ -9,7 +9,8 @@ Simulador de checkout de e-comerce usando terminal
  * Execução via terminal (sem interface gráfica ou web)
 * Armazenamento de dados em memória (sem banco de dados)
 * [Ver esboço UML V1](uml_v1.png)
-
+* Teste automatizado - [JUnit 5](https://junit.org/)
+* Gerenciador de dependência -  [Maven](https://maven.apache.org/)
 
 ### ▶️ Execução do programa
 1. Clonar o repositorio 
@@ -39,3 +40,15 @@ Visando uma melhor organização, toda a parte de coleta de dados, tratamentos e
 | `ProductEntity` | Produtor | `ProductService` | ProductServiceImpl |
 | `CouponEntity` | Cupom | `CouponService` | `CouponServiceImpl` |
 | `SaleItemEntity` | Item da compra | - | - |
+
+### ✅ Testes
+Com o objetivo de garantir segurança e confiabilidade no código, foram implementados testes unitários utilizando o framework `JUnit 5`.
+
+Para facilitar a execução dos testes, o projeto adota o `Maven` como gerenciador de dependências.
+
+**Como executar os testes**
+
+1. Com o projeto aberto na sua IDE:
+2. Expanda a pasta `src/test/java`;
+3. Clique com o botão direito sobre a pasta de testes ou sobre qualquer classe de teste específica;
+4. Selecione a opção `Run`
