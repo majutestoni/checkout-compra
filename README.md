@@ -26,3 +26,14 @@ Caso informe algum dado erroneamente, ex: deveria por `1` e informei `a` o siste
 > Valor fora do intervalo permitido.
 
 e novamente poderá informar outro valor
+
+### Explicando um pouco do código
+
+Visando melhor organização, toda a parte de coleta de dados, tratamentos e processamento ficam nos serviços, sendo a Main somente para chamar o `SaleService` (vulgo serviço principal) 
+
+| Entitdade | Representa | Serviço | Implementação |
+| ------ | ------ | ------ | ------ |
+| `SaleEntity` | Compra/Venda | SaleService | SaleServiceImpl |
+| `ProductEntity` | Produtor | ProductService | ProductServiceImpl |
+| `CouponEntity` | Cupom | CouponService | CouponServiceImpl |
+| `SaleItemEntity` | Item da compra |  | |
