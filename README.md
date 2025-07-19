@@ -9,7 +9,7 @@ Simulador de checkout de e-comerce usando terminal
  * Execução via terminal (sem interface gráfica ou web)
 * Armazenamento de dados em memória (sem banco de dados)
 * [Ver esboço UML V1](uml_v1.png)
-* Teste automatizado - [JUnit 5](https://junit.org/)
+* Teste unitário - [JUnit 5](https://junit.org/)
 * Gerenciador de dependência -  [Maven](https://maven.apache.org/)
 
 ### ▶️ Execução do programa
@@ -25,14 +25,14 @@ Simulador de checkout de e-comerce usando terminal
 ### 📋 Usando o programa
 O **sistema é interativo via terminal**, com menus guiados e opções numéricas.
 
-Se um valor inválido for informado (ex: letra onde era número), o sistema irá exibir:
+Se um valor inválido for informado (ex: letra onde era número), o sistema irá exibir uma mensagem parecida com:
 > Valor fora do intervalo permitido.
 
 E solicitará nova entrada.
 
 ### 📐 Explicando um pouco do código
 
-Visando uma melhor organização, toda a parte de coleta de dados, tratamentos e processamento ficam nos serviços, sendo a `Main` somente para chamar o `SaleService` (vulgo serviço principal) 
+Visando uma melhor organização, toda a parte de coleta de dados, tratamentos e processamento, ficam nos serviços, sendo a `Main`, somente para chamar o `SaleService` (vulgo serviço principal) 
 
 | Entitdade | Representa | Serviço | Implementação |
 | ------ | ------ | ------ | ------ |
