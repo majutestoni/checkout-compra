@@ -1,4 +1,4 @@
-package com.estudo.checkout_compra.dtos;
+package com.estudo.checkout_compra.dtos.product;
 
 import java.math.BigDecimal;
 

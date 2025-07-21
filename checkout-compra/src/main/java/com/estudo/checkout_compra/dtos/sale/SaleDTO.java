@@ -1,7 +1,9 @@
-package com.estudo.checkout_compra.dtos;
+package com.estudo.checkout_compra.dtos.sale;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.estudo.checkout_compra.dtos.product.ProductSaleDTO;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -56,4 +58,6 @@ public class SaleDTO {
 	public void setQuantityInstallments(int quantityInstallments) {
 		this.quantityInstallments = quantityInstallments;
 	}
+
+
 }

@@ -2,8 +2,6 @@ package com.estudo.checkout_compra.services.sale;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 import org.springframework.stereotype.Service;
 
@@ -12,8 +10,9 @@ import com.estudo.checkout_compra.domain.product.ProductEntity;
 import com.estudo.checkout_compra.domain.sale.PaymentMethod;
 import com.estudo.checkout_compra.domain.sale.SaleEntity;
 import com.estudo.checkout_compra.domain.sale.SaleItemEntity;
-import com.estudo.checkout_compra.dtos.ProductSaleDTO;
-import com.estudo.checkout_compra.dtos.SaleDTO;
+import com.estudo.checkout_compra.dtos.product.ProductSaleDTO;
+import com.estudo.checkout_compra.dtos.sale.SaleDTO;
+import com.estudo.checkout_compra.dtos.sale.SaleInfoDTO;
 import com.estudo.checkout_compra.repositorys.sale.SaleRepository;
 import com.estudo.checkout_compra.services.coupon.CouponService;
 import com.estudo.checkout_compra.services.product.ProductService;
@@ -37,7 +36,7 @@ public class SaleServiceImpl implements SaleService {
 	}
 
 	@Override
-	public SaleEntity newSale(SaleDTO dto) {
+	public SaleInfoDTO newSale(SaleDTO dto) {
 		SaleEntity entity = new SaleEntity();
 		boolean whithFreight = true;
 

@@ -1,11 +1,9 @@
 package com.estudo.checkout_compra.services.product;
 
-import java.math.BigDecimal;
-
 import org.springframework.stereotype.Service;
 
 import com.estudo.checkout_compra.domain.product.ProductEntity;
-import com.estudo.checkout_compra.dtos.ProductSaleDTO;
+import com.estudo.checkout_compra.dtos.product.ProductSaleDTO;
 import com.estudo.checkout_compra.repositorys.product.ProductRepositoy;
 
 /**

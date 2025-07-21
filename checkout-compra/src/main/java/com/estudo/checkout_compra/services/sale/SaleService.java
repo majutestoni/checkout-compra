@@ -1,7 +1,7 @@
 package com.estudo.checkout_compra.services.sale;
 
 import com.estudo.checkout_compra.domain.sale.SaleEntity;
-import com.estudo.checkout_compra.dtos.SaleDTO;
+import com.estudo.checkout_compra.dtos.sale.SaleDTO;
 
 /**
  * Serviço utilizando para as compras
